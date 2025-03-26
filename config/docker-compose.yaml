@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres_db
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  airflow:
+    image: apache/airflow:latest
+    container_name: airflow
+    restart: always
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+      - ./configs/airflow.cfg:/opt/airflow/airflow.cfg
+    command: >
+      bash -c "airflow db init &&
+               airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com &&
+               airflow scheduler & airflow webserver"
+  etl:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: etl_pipeline
+    restart: 'no'
+    volumes:
+      - ../data:/tourism_analysis/data
+    env_file:
+      - .env
+
+volumes:
+  postgres_data:
