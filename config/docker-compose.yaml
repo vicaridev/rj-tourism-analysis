@@ -3,12 +3,14 @@ services:
     image: postgres:15
     container_name: postgres_db
     restart: always
+    ports:
+      - "5432:5432"
     env_file:
-      - .env
+      - ../config/.env
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "$POSTGRES_USER"]
+      test: ["CMD", "pg_isready -d $POSTGRES_DB -U $POSTGRES_USER"]
       interval: 10s
       retries: 5
       timeout: 5s
@@ -21,7 +23,7 @@ services:
       postgres:
         condition: service_healthy
     env_file:
-      - .env
+      - ../config/.env
     volumes:
       - ./dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
@@ -39,7 +41,7 @@ services:
       postgres:
         condition: service_healthy
     env_file:
-      - .env
+      - ../config/.env
     volumes:
       - ./dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
