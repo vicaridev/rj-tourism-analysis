@@ -1,17 +1,22 @@
+#%%
 import psycopg2
 from psycopg2.extras import DictCursor
 import os
 import logging
+from dotenv import load_dotenv
+
+
+load_dotenv('../config/.env.postgres')
 
 
 logger = logging.getLogger(__name__)
 
 DB_PARAMS = {
-    "dbname": os.getenv("DB_NAME"),
-    "user": os.getenv("DB_USER"),
-    "password": os.getenv("DB_PASSWORD"),
-    "host": os.getenv("DB_HOST"),
-    "port": os.getenv("DB_PORT"),
+    "dbname": os.getenv("POSTGRES_DB"),
+    "user": os.getenv("POSTGRES_USER"),
+    "password": os.getenv("POSTGRES_PASSWORD"),
+    "host": os.getenv("POSRGRES_HOST"),
+    "port": os.getenv("POSRGRES_PORT"),
 }
 
 
@@ -29,7 +34,7 @@ def execute_query(query, params=None, fetch_one=False, fetch_all=False):
         return None
     
     try:
-        with conn.cursos(cursorFactory=DictCursor) as cursor:
+        with conn.cursor(cursorFactory=DictCursor) as cursor:
             
             cursor.execute(query, params or ())
             
