@@ -15,14 +15,14 @@ class get_flight_payload(TypedDict):
     return_date: str
 
 
-def get_flights():
-    # departure_id, arrival_id, outbound_date, return_date = payload.values()
+def get_flights(payload: get_flight_payload):
+    departure_id, arrival_id, outbound_date, return_date = payload.values()
     api_payload = {
         "engine": "google_flights",
-        "departure_id": 'VCP',
-        "arrival_id": 'SDU',
-        "outbound_date": '2025-03-29',
-        "return_date": '2025-05-03',
+        "departure_id": departure_id,
+        "arrival_id": arrival_id,
+        "outbound_date": outbound_date,
+        "return_date": return_date,
         "currency": "BRL",
         "hl": "BR",
         "gl": "br",
