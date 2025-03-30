@@ -10,7 +10,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready -d $POSTGRES_DB -U $POSTGRES_USER"]
+      test: ["CMD", "pg_isready", "-d", "airflow", "-U", "admin"]
       interval: 10s
       retries: 5
       timeout: 5s
@@ -41,7 +41,7 @@ services:
       postgres:
         condition: service_healthy
     env_file:
-      - ../config/.env
+      - ../config/.env.airflow
     volumes:
       - ./dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
