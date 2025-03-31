@@ -1,10 +1,9 @@
-
 #%%
 import os
 import gzip
 import pandas as pd
 import requests
-
+from utils.config import BRONZE_DIR
 
 
 files = {
@@ -13,15 +12,11 @@ files = {
     'reviews': 'https://data.insideairbnb.com/brazil/rj/rio-de-janeiro/2024-12-27/data/reviews.csv.gz'
 }
 
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.."))
-BRONZE_DIR = os.path.join(BASE_DIR, "data", "airbnb", "bronze")
 
 
 
 def extract_airbnb_data():
-    os.makedirs(BRONZE_DIR, exist_ok=True)
-    print(BASE_DIR)
-    print(BRONZE_DIR)
+    
     for filename, url in files.items():
         print(f'Iniciando extração do arquivo {filename}')
         
@@ -61,4 +56,4 @@ def extract_airbnb_data():
 
     print('Extração do Airbnb concluída!')    
     
-extract_airbnb_data()
+    return

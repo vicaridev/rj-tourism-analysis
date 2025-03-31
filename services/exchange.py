@@ -1,5 +1,9 @@
 import os
 import requests
+from dotenv import load_dotenv
+from utils.config import BASE_DIR
+
+load_dotenv(os.path.join(BASE_DIR, 'config', '.env'))
 
 def get_exchange_rate():
     api_key = os.getenv('EXCHANGE_API_KEY')
