@@ -24,4 +24,4 @@ def transform_reviews_silver():
 
     logger.info('Airbnb reviews data transformed and saved successfully!')
 
-    return df
+    return
