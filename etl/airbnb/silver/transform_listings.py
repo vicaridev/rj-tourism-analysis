@@ -10,9 +10,9 @@ from utils.config import SILVER_DIR, BRONZE_DIR
 logger = logging.getLogger(__name__)
 
 def transform_listings_silver(): 
-    listings_path = os.path.join(BRONZE_DIR, 'listings.csv')
+    listings_path = os.path.join(BRONZE_DIR, 'listings.parquet')
     logger.info('Starting airbnb listings data transforming')
-    df = pd.read_csv(listings_path)
+    df = pd.read_parquet(listings_path)
 
     hosts_columns = ['host_id',
                     'host_url', 'host_name', 'host_since', 'host_location', 'host_about',
@@ -60,8 +60,10 @@ def transform_listings_silver():
                     .rename(columns={'host_response_rate': 'host_response_rate_%',
                                     'host_acceptance_rate': 'host_acceptance_rate_%'})
                     )
+    
+    logger.info('Saving airbnb hosts data into parquet file')
 
-    df_hosts.to_csv(os.path.join(SILVER_DIR, 'hosts_clean.csv'), index=False)
+    df_hosts.to_parquet(os.path.join(SILVER_DIR, 'hosts_clean.parquet'), index=False)
 
     df = (df.drop(columns=hosts_columns + ['scrape_id', 'last_scraped', 'source', 
                                     'amenities', 'minimum_minimum_nights', 'maximum_minimum_nights',
@@ -112,14 +114,10 @@ def transform_listings_silver():
 
     df[['instant_bookable', 'has_availability']] = df[['instant_bookable', 'has_availability']].replace({'f': 'No', 't': 'Yes'})
 
-    logger.info('Saving airbnb listings data into csv file')
+    logger.info('Saving airbnb listings data into parquet file')
 
-    df.to_csv(os.path.join(SILVER_DIR, 'listings_clean.csv'), index=False)
+    df.to_parquet(os.path.join(SILVER_DIR, 'listings_clean.parquet'), index=False)
 
     logger.info('Airbnb listings data transformed and saved successfully!')
 
     return
-
-transform_listings_silver()
-
- 

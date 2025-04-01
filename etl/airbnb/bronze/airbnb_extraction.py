@@ -21,7 +21,7 @@ def extract_airbnb_data():
         print(f'Iniciando extração do arquivo {filename}')
         
         gzb_path = os.path.join(BRONZE_DIR, f'{filename}.csv.gz')
-        csv_path = os.path.join(BRONZE_DIR, f'{filename}.csv')
+        file_path = os.path.join(BRONZE_DIR, f'{filename}.parquet')
 
         print(f'Baixando arquivo {filename}... {url}')
         response = requests.get(url, stream=True)
@@ -46,8 +46,8 @@ def extract_airbnb_data():
             with gzip.open(gzb_path, 'rt', encoding='utf-8') as file:
                 df = pd.read_csv(file)
             
-            print(f'Salvando {filename} como CSV...')
-            df.to_csv(csv_path, index=False)
+            print(f'Salvando {filename} como PARQUET...')
+            df.to_parquet(file_path, index=False)
 
             os.remove(gzb_path)
             print(f'{filename} extraído e transformado com sucesso\n')
