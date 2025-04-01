@@ -1,3 +1,4 @@
+#%%
 import os
 import pandas as pd
 import logging
@@ -60,7 +61,7 @@ def transform_listings_silver():
                                     'host_acceptance_rate': 'host_acceptance_rate_%'})
                     )
 
-    df_hosts.to_csv(os.path.join(SILVER_DIR, 'hosts_clean.csv'))
+    df_hosts.to_csv(os.path.join(SILVER_DIR, 'hosts_clean.csv'), index=False)
 
     df = (df.drop(columns=hosts_columns + ['scrape_id', 'last_scraped', 'source', 
                                     'amenities', 'minimum_minimum_nights', 'maximum_minimum_nights',
@@ -118,5 +119,7 @@ def transform_listings_silver():
     logger.info('Airbnb listings data transformed and saved successfully!')
 
     return
+
+transform_listings_silver()
 
  
