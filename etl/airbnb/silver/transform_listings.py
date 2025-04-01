@@ -101,8 +101,8 @@ def transform_listings_silver():
                     'has_availability': 'string',
                     'first_review': 'datetime64[ns]',
                     'last_review': 'datetime64[ns]',
-                    'instant_bookable': 'string',
-            }))
+                    'instant_bookable': 'string',}))
+    
     df['first_review_filled'] = df['first_review'].fillna(pd.NaT)
     df['never_reviewd'] = df['first_review'].isna().astype(int)
     df = df.replace({
@@ -119,7 +119,3 @@ def transform_listings_silver():
     logger.info('Airbnb listings data transformed and saved successfully!')
 
     return
-
-transform_listings_silver()
-
- 
