@@ -13,6 +13,8 @@ def transform_listings_silver():
     listings_path = os.path.join(BRONZE_DIR, 'listings.parquet')
     logger.info('Starting airbnb listings data transforming')
     df = pd.read_parquet(listings_path)
+    
+    df['host_id_2'] = df['host_id']
 
     hosts_columns = ['host_id',
                     'host_url', 'host_name', 'host_since', 'host_location', 'host_about',
@@ -57,8 +59,9 @@ def transform_listings_silver():
                             'host_has_profile_pic': 'string',
                             'host_identity_verified': 'string'
                     })
-                    .rename(columns={'host_response_rate': 'host_response_rate_%',
-                                    'host_acceptance_rate': 'host_acceptance_rate_%'})
+                    .rename(columns={'host_response_rate': 'host_response_rate_perc',
+                                    'host_acceptance_rate': 'host_acceptance_rate_perc',
+                                    'host_id': 'id'})
                     )
     
     logger.info('Saving airbnb hosts data into parquet file')
@@ -71,8 +74,12 @@ def transform_listings_silver():
                                     'number_of_reviews_ltm', 'number_of_reviews_l30d', 'calendar_updated', 'neighbourhood',
                                     'neighbourhood_group_cleansed', 'license', 'review_scores_accuracy', 'review_scores_cleanliness',
                                     'review_scores_checkin', 'review_scores_communication', 'review_scores_location', 'review_scores_value'])
-            .rename(columns={'price': 'price_USD'})
-            .dropna(subset=['price_USD', 'has_availability', 'bathrooms', 'bathrooms_text', 'bedrooms', 'beds']))
+            .rename(columns={'price': 'price_USD',
+                             'host_id_2': 'host_id'})
+            .dropna(subset=['price_USD', 'has_availability', 'bathrooms', 'bathrooms_text', 'bedrooms', 'beds'])
+            .astype({'id': 'string',
+                     'available': 'string'})
+            )
 
     df['price_USD'] = (df['price_USD'].str.replace(r'[$,]', '', regex=True)
                                     .astype(float))
@@ -121,3 +128,5 @@ def transform_listings_silver():
     logger.info('Airbnb listings data transformed and saved successfully!')
 
     return
+
+transform_listings_silver()

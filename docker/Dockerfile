@@ -12,7 +12,3 @@ COPY requirements.txt .
 
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
-
-RUN chmod +x /tourism_analysis/etl/run_etl.sh
-
-CMD ["/tourism_analysis/etl/run_etl.sh" ]

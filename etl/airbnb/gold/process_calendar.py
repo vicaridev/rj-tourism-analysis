@@ -1,6 +1,8 @@
+#%%
 import pandas as pd
 import os
 from datetime import datetime
+from utils.config import BASE_DIR, SILVER_DIR
 
 def transform_calendar_gold():
     listings_path = os.path.join(BASE_DIR, 'data', 'airbnb', 'silver', 'listings_clean.csv')
@@ -18,3 +20,7 @@ def transform_calendar_gold():
     logger.info('Calendar at gold layer processed successfully')
     
     return 
+
+#%%
+calendar_path = os.path.join(BASE_DIR, 'data', 'airbnb', 'silver', 'calendar_clean.parquet')
+df = pd.read_parquet(calendar_path_path)
