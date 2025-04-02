@@ -23,4 +23,8 @@ def transform_calendar_gold():
 
 #%%
 calendar_path = os.path.join(BASE_DIR, 'data', 'airbnb', 'silver', 'calendar_clean.parquet')
-df = pd.read_parquet(calendar_path_path)
+df = pd.read_parquet(calendar_path)
+
+
+#%%
+df.info()

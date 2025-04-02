@@ -1,32 +1,35 @@
-
 #%%
 import psycopg2
 from psycopg2.extras import DictCursor
 from pathlib import Path
 import os
 import logging
+from sqlalchemy import create_engine
+from sqlalchemy.engine import URL
+from urllib.parse import quote_plus
 import sys
-from dotenv import load_dotenv, dotenv_values
+from utils.config import BASE_DIR
+from dotenv import load_dotenv
 
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
-sys.path.append(BASE_DIR)
-
-env_path = os.path.abspath(os.path.join(BASE_DIR, '..', 'config', '.env.postgres'))
+env_path = os.path.abspath(os.path.join(BASE_DIR, 'config', '.env.postgres'))
 
 load_dotenv(env_path)
 logger = logging.getLogger(__name__)
 
 
+DB_PARAMS = {
+    "dbname": os.getenv("POSTGRES_DB"),
+    "user": os.getenv("POSTGRES_USER"),
+    "password": os.getenv("POSTGRES_PASSWORD"),
+    "host": os.getenv("POSTGRES_HOST"),
+    "port": os.getenv("POSTGRES_PORT"),
+    "client_encoding": "utf8"
+}
+
+
 def get_connection():
-    DB_PARAMS = {
-        "dbname": os.getenv("POSTGRES_DB"),
-        "user": os.getenv("POSTGRES_USER"),
-        "password": os.getenv("POSTGRES_PASSWORD"),
-        "host": os.getenv("POSRGRES_HOST"),
-        "port": os.getenv("POSRGRES_PORT"),
-    }
     try:
-        conn = psycopg2.connect(**DB_PARAMS)
+        conn = psycopg2.connect("dbname=airflow user=admin password=securepassword host=postgres_db")   
         return conn
     except Exception as e:
         logger.error(f'Couldn\'t connect to database. Error: {e}')
@@ -51,4 +54,3 @@ def execute_query(query, params=None, fetch_one=False, fetch_all=False):
         logger.error(f'Couldn\'t execute query. Error: {e}')
     finally:
         conn.close()
-

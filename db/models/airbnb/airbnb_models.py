@@ -10,8 +10,8 @@ load_dotenv(os.path.join(BASE_DIR, 'config', '.env.postgres'))
 DATABASE_URL = os.getenv('POSTGRES_URL')
 
 engine = create_engine(DATABASE_URL)
-
 Base = declarative_base()
+
 
 class Host(Base):
     __tablename__ = 'hosts'
@@ -74,22 +74,28 @@ class Listing(Base):
     calculated_host_listings_count_private_rooms = Column(Integer)
     calculated_host_listings_count_shared_rooms =  Column(Integer)
     reviews_per_month = Column(Float)
-    host_id =  Column(Integer)
+    host_id =  Column(Integer, ForeignKey('hosts.id'))
     price_BRL =  Column(Float)
     price_category =  Column(String)
     first_review_filled = Column(DateTime)
     never_reviewd = Column(Integer)
     
+    host = relationship('Host', back_populates='listings')
+    
 class Calendar(Base):
     __tablename__ = 'calendar'
-    id = Column(String(36), primary_key=True, default=lambda : str(uuid.uuid4()))
-    listing_id = Column(String)
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    listing_id = Column(String, ForeignKey('listings.id'))
     date =  Column(DateTime)
     available =  Column(String)
     price_USD =  Column(Float)
     minimum_nights = Column(Float)
     maximum_nights = Column(Float)
     
+    listing = relationship('Listing', back_populates='calendar')
+    
     
 Base.metadata.create_all(engine)
+    
+    
     
