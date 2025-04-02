@@ -39,7 +39,7 @@ class Listing(Base):
     __tablename__ = 'listings'
     
     id =  Column(String(36), primary_key=True, default= lambda: str(uuid.uuid4()))
-    listing_url =  Column(String)
+    listing_url =  Column(String, nullable=False)
     name =  Column(String)
     description =  Column(String)
     neighborhood_overview = Column(String)
@@ -74,7 +74,7 @@ class Listing(Base):
     calculated_host_listings_count_private_rooms = Column(Integer)
     calculated_host_listings_count_shared_rooms =  Column(Integer)
     reviews_per_month = Column(Float)
-    host_id =  Column(Integer, ForeignKey('hosts.id'))
+    host_id =  Column(Integer, ForeignKey('hosts.id'), nullable=False)
     price_BRL =  Column(Float)
     price_category =  Column(String)
     first_review_filled = Column(DateTime)
@@ -85,7 +85,7 @@ class Listing(Base):
 class Calendar(Base):
     __tablename__ = 'calendar'
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    listing_id = Column(String, ForeignKey('listings.id'))
+    listing_id = Column(String, ForeignKey('listings.id'), nullable=False)
     date =  Column(DateTime)
     available =  Column(String)
     price_USD =  Column(Float)
