@@ -10,8 +10,8 @@ from utils.config import SILVER_DIR, BRONZE_DIR
 logger = logging.getLogger(__name__)
 
 def transform_listings_silver(): 
+    logger.info('Starting airbnb listings data transforming...')
     listings_path = os.path.join(BRONZE_DIR, 'listings.parquet')
-    logger.info('Starting airbnb listings data transforming')
     df = pd.read_parquet(listings_path)
     
     df['host_id_2'] = df['host_id']
@@ -64,7 +64,7 @@ def transform_listings_silver():
                                     'host_id': 'id'})
                     )
     
-    logger.info('Saving airbnb hosts data into parquet file')
+    logger.info('Saving airbnb hosts data into parquet file...')
 
     df_hosts.to_parquet(os.path.join(SILVER_DIR, 'hosts_clean.parquet'), index=False)
 
@@ -121,7 +121,7 @@ def transform_listings_silver():
 
     df[['instant_bookable', 'has_availability']] = df[['instant_bookable', 'has_availability']].replace({'f': 'No', 't': 'Yes'})
 
-    logger.info('Saving airbnb listings data into parquet file')
+    logger.info('Saving airbnb listings data into parquet file...')
 
     df.to_parquet(os.path.join(SILVER_DIR, 'listings_clean.parquet'), index=False)
 

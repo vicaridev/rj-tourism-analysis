@@ -4,6 +4,7 @@ import gzip
 import pandas as pd
 import requests
 from utils.config import BRONZE_DIR
+from utils.logger import logging
 
 
 files = {
@@ -18,42 +19,42 @@ files = {
 def extract_airbnb_data():
     
     for filename, url in files.items():
-        print(f'Iniciando extração do arquivo {filename}')
+        logging.info(f'Iniciando extração do arquivo {filename}')
         
         gzb_path = os.path.join(BRONZE_DIR, f'{filename}.csv.gz')
         file_path = os.path.join(BRONZE_DIR, f'{filename}.parquet')
 
-        print(f'Baixando arquivo {filename}... {url}')
+        logging.info(f'Baixando arquivo {filename}... {url}')
         response = requests.get(url, stream=True)
         
         if response.status_code == 200:
-            print(f'{filename} baixado com sucesso!')
+            logging.info(f'{filename} baixado com sucesso!')
             try:
                 with open(gzb_path, 'wb') as file:
                     for chunk in response.iter_content(chunk_size=1024):
                         if chunk:
                             file.write(chunk)
-                print(f'{filename}.csv.gz salvo com sucesso!')
+                logging.info(f'{filename}.csv.gz salvo com sucesso!')
             except Exception as e:
-                print(f'Erro ao salvar o arquivo {filename}: {e}')
+                logging.info(f'Erro ao salvar o arquivo {filename}: {e}')
                 continue
         else:
-            print(f'Falha ao baixar {filename}, status code: {response.status_code}')
+            logging.info(f'Falha ao baixar {filename}, status code: {response.status_code}')
             continue  
         
-        print(f'Convertendo {filename} para dataframe...')
+        logging.info(f'Convertendo {filename} para dataframe...')
         try:
             with gzip.open(gzb_path, 'rt', encoding='utf-8') as file:
                 df = pd.read_csv(file)
             
-            print(f'Salvando {filename} como PARQUET...')
+            logging.info(f'Salvando {filename} como PARQUET...')
             df.to_parquet(file_path, index=False)
 
             os.remove(gzb_path)
-            print(f'{filename} extraído e transformado com sucesso\n')
+            logging.info(f'{filename} extraído e transformado com sucesso\n')
         except Exception as e:
-            print(f'Erro ao processar o arquivo {filename}: {e}')
+            logging.info(f'Erro ao processar o arquivo {filename}: {e}')
 
-    print('Extração do Airbnb concluída!')    
+    logging.info('Extração do Airbnb concluída!')    
     
     return

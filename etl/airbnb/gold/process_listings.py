@@ -7,8 +7,8 @@ from utils.config import SILVER_DIR, GOLD_DIR, BRONZE_DIR
 
 #%%
 def process_listings_gold():
+    logger.info('Processing listings data...')
     listings_path = os.path.join(SILVER_DIR, 'listings_clean.csv')
-    logger.info('Starting airbnb calendar data processing')
     df = pd.read_parquet(listings_path)
     
     mean_price_by_neighborhood = (df.groupby(['neighbourhood', 'room_type'])
@@ -27,6 +27,8 @@ def process_listings_gold():
             'longitude': 'mean'
     })
     
+    logger.info('Saving neighbourhood geolocation data into parquet...')
     df_neighbourhood.to_parquet(os.path.join(GOLD_DIR, 'neighbourhood_geolocation.parquet'), index=False)
+    logger.info('Neighbourhood geolocation data processed successfully!')
     
     return

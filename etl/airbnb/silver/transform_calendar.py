@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 def transform_calendar_silver():
     
-    logger.info('Starting airbnb calendar data transforming')
+    logger.info('Starting airbnb calendar data transforming...')
     calendar_path = os.path.join(BRONZE_DIR, 'calendar.parquet')    
     df = pd.read_parquet(calendar_path)
 
@@ -29,7 +29,7 @@ def transform_calendar_silver():
     df['available'] = (df['available'].replace({'f': 'No', 't': 'Yes'})
                                       .astype(str))
 
-    logger.info('Saving airbnb calendar data into parquet file')
+    logger.info('Saving airbnb calendar data into parquet file...')
     df.to_parquet(os.path.join(SILVER_DIR, 'calendar_clean.parquet'), index=False)
 
     logger.info('Airbnb calendar data transformed and saved successfully!')
