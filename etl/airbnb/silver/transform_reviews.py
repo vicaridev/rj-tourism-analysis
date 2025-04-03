@@ -13,12 +13,20 @@ def transform_reviews_silver():
     reviews_path = os.path.join(BRONZE_DIR, 'reviews.parquet')
     #Silver layer
     df = pd.read_parquet(reviews_path)
-    df = df.replace({
+    df = (df.replace({
             'reviewer_name': {np.nan: 'Unknown'},
             'comments': {np.nan: 'Not commented'}
-    })
-
-
+            })
+            .astype({
+                'date': 'datetime64[ns]',
+                'reviewer_name': 'string',
+                'listing_id': 'string',
+                'comments': 'string',
+                'reviewer_id': 'string'
+            })
+            .drop(columns=['id'])
+            )
+    
     logger.info('Saving airbnb reviews data into csv file')
     df.to_parquet(os.path.join(SILVER_DIR, 'reviews_clean.parquet'), index=False)
 

@@ -125,8 +125,7 @@ def transform_listings_silver():
 
     df.to_parquet(os.path.join(SILVER_DIR, 'listings_clean.parquet'), index=False)
 
+
     logger.info('Airbnb listings data transformed and saved successfully!')
 
     return
-
-transform_listings_silver()

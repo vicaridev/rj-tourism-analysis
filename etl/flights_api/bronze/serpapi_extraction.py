@@ -2,20 +2,15 @@
 import requests
 from dotenv import load_dotenv
 import pandas as pd
-from typing import TypedDict
 import os
 from serpapi import GoogleSearch
+from utils.config import BASE_DIR
 
-load_dotenv('../../../config/.env')
-
-class get_flight_payload(TypedDict):
-    departure_id: str
-    arrival_id: str
-    outbound_date: str
-    return_date: str
+env_path = os.path.join(BASE_DIR, 'config', '.env')
+load_dotenv(env_path)
 
 
-def get_flights(payload: get_flight_payload):
+def get_flights(payload):
     departure_id, arrival_id, outbound_date, return_date = payload.values()
     api_payload = {
         "engine": "google_flights",

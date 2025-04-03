@@ -19,14 +19,14 @@ def process_listings_gold():
                                             ).round(decimals=2)
                                             .reset_index())
         
-    mean_price_by_neighborhood.to_csv(os.path.join(GOLD_DIR, 'mean_price_by_neighborhood.csv'), index=False)
+    mean_price_by_neighborhood.to_parquet(os.path.join(GOLD_DIR, 'mean_price_by_neighborhood.parquet'), index=False)
+    
+    df_neighbourhood = df[['neighbourhood', 'latitude', 'longitude']]
+    df_neighbourhood = df_neighbourhood.groupby('neighbourhood', as_index=False).agg({
+            'latitude': 'mean',
+            'longitude': 'mean'
+    })
+    
+    df_neighbourhood.to_parquet(os.path.join(GOLD_DIR, 'neighbourhood_geolocation.parquet'), index=False)
     
     return
-
-#%%
-listings_path = os.path.join(SILVER_DIR, 'listings_clean.parquet')
-# logger.info('Starting airbnb calendar data processing')
-df = pd.read_parquet(listings_path)
-#%%
-df.info()
-

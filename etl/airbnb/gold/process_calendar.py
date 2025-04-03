@@ -5,26 +5,19 @@ from datetime import datetime
 from utils.config import BASE_DIR, SILVER_DIR
 
 def transform_calendar_gold():
-    listings_path = os.path.join(BASE_DIR, 'data', 'airbnb', 'silver', 'listings_clean.csv')
-    df_listings = pd.read_csv(listings_path)
+    calendar_path = os.path.join(BASE_DIR, 'data', 'airbnb', 'silver', 'calendar_clean.parquet')
+    df_calendar = pd.read_parquet(calendar_path)
     today = pd.Timestamp(datetime.today()).normalize()
-    
-    date_condition = df_available_bookings['date'] >= today 
-    df_available_bookings = df[date_condition]
-    
-    availability_condition = df['available'] == 'Yes'
-    df_available_bookings = df_available_bookings[availability_condition]
-    
+
+    availability_condition = df_calendar['available'] == 'Yes'
+    df_available_bookings = df_calendar[availability_condition]
+
+    date_condition = df_available_bookings['date'] >= today
+    df_available_bookings = df_available_bookings[date_condition]
+
+
     df_available_bookings.to_csv(os.path.join(GOLD_DIR, 'available_bookings.csv'), index=False)
 
     logger.info('Calendar at gold layer processed successfully')
-    
-    return 
-
-#%%
-calendar_path = os.path.join(BASE_DIR, 'data', 'airbnb', 'silver', 'calendar_clean.parquet')
-df = pd.read_parquet(calendar_path)
-
-
-#%%
-df.info()
+        
+    return

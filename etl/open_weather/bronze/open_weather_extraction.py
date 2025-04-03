@@ -18,9 +18,9 @@ def get_weather_info(lat='-22.9035', lon='-43.2096'):
 
 
     neighbourhood = data['city']['name']
-    
+
     df = pd.DataFrame(data['list'])
-    
+
     df_main = pd.json_normalize(df['main'])
     df_clouds = pd.json_normalize(df['clouds'])
     df_rain = pd.json_normalize(df['rain']).fillna(0)
@@ -28,15 +28,18 @@ def get_weather_info(lat='-22.9035', lon='-43.2096'):
 
     df_final = pd.concat([df[['dt_txt']], df_main, df_clouds, df_rain, df_weather[['main']]], axis=1)
 
-    df_final.rename(columns={
-        'dt_txt': 'date',
-        'all': '%_clouds',
-        'main': 'weather',
-        '3h': '3h_rain'
-    }, inplace=True)
+    df_final = (df_final.rename(columns={'dt_txt': 'date',
+                                        'all': '%_clouds',
+                                        'main': 'weather',
+                                        '3h': '3h_rain'})
+                        .astype({
+                            'date': 'datetime64[ns]',
+                            'weather': 'string'
+                        })
+                )
 
-    df_final.insert(0, 'id', range(1, len(df_final) + 1))
-    df_final.insert(1, 'neighbourhood', neighbourhood)
+    (df_final.insert(1, 'neighbourhood', neighbourhood))
     df_final.reset_index(drop=True, inplace=True)
+    df_final = df_final.astype({'neighbourhood': 'string'})
     
-    return df_final
+    return
