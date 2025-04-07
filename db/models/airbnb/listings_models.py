@@ -49,3 +49,14 @@ class Listing(Base):
     never_reviewd = Column(Integer)
     
     host = relationship('Host', back_populates='listings')
+    
+class MeanPrice(Base):
+    __tablename__ = 'neighbourhood_mean_price'
+    
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    neighbourhood = Column(String)
+    room_type = Column(String)
+    price_category = Column(String)
+    total_listings = Column(Integer)
+    mean_price_USD = Column(Float)
+    mean_price_BRL = Column(Float)
