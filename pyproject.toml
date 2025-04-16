@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "projeto_eng_dados"
+version = "0.1.0"
+description = "Projeto de engenharia de dados com Airflow, ETL, APIs e PostgreSQL"
+authors = [
+    { name = "Seu Nome", email = "seuemail@example.com" }
+]
+readme = "README.md"
+requires-python = ">=3.10"
+
+dependencies = [
+    "pandas>=2.0",
+    "requests",
+    "python-dotenv",
+    "sqlalchemy",
+    "psycopg2-binary",
+
+    "apache-airflow==2.10.5",
+    "apache-airflow-providers-postgres",
+    "apache-airflow-providers-http",
+
+    "openmeteo-requests",        
+    "google-search-results",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black",
+    "flake8",
+    "ipython",
+    "mypy"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["etl*", "utils*", "services*", "*db"]

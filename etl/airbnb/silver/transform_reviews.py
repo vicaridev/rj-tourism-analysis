@@ -1,4 +1,3 @@
-#%%
 import os
 import pandas as pd
 import logging
@@ -33,4 +32,4 @@ def transform_reviews_silver():
 
     logging.info('Reviews data transformed and saved successfully!')
 
-    return
+    pass

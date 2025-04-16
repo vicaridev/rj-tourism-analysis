@@ -42,4 +42,4 @@ def get_weather_info(lat='-22.9035', lon='-43.2096'):
     df_final.reset_index(drop=True, inplace=True)
     df_final = df_final.astype({'neighbourhood': 'string'})
     
-    return
+    pass

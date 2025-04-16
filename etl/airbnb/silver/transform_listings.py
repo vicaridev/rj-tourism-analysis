@@ -13,7 +13,7 @@ def transform_listings_silver():
     logger.info('Starting airbnb listings data transforming...')
     listings_path = os.path.join(BRONZE_DIR, 'listings.parquet')
     df = pd.read_parquet(listings_path)
-    
+
     df['host_id_2'] = df['host_id']
 
     hosts_columns = ['host_id',
@@ -63,7 +63,7 @@ def transform_listings_silver():
                                     'host_acceptance_rate': 'host_acceptance_rate_perc',
                                     'host_id': 'id'})
                     )
-    
+
     logger.info('Saving airbnb hosts data into parquet file...')
 
     df_hosts.to_parquet(os.path.join(SILVER_DIR, 'hosts_clean.parquet'), index=False)
@@ -75,10 +75,10 @@ def transform_listings_silver():
                                     'neighbourhood_group_cleansed', 'license', 'review_scores_accuracy', 'review_scores_cleanliness',
                                     'review_scores_checkin', 'review_scores_communication', 'review_scores_location', 'review_scores_value'])
             .rename(columns={'price': 'price_USD',
-                             'host_id_2': 'host_id'})
+                            'host_id_2': 'host_id'})
             .dropna(subset=['price_USD', 'has_availability', 'bathrooms', 'bathrooms_text', 'bedrooms', 'beds'])
             .astype({'id': 'string',
-                     'available': 'string'})
+                    'has_availability': 'string'})
             )
 
     df['price_USD'] = (df['price_USD'].str.replace(r'[$,]', '', regex=True)
@@ -111,7 +111,7 @@ def transform_listings_silver():
                     'first_review': 'datetime64[ns]',
                     'last_review': 'datetime64[ns]',
                     'instant_bookable': 'string',}))
-    
+
     df['first_review_filled'] = df['first_review'].fillna(pd.NaT)
     df['never_reviewd'] = df['first_review'].isna().astype(int)
     df = df.replace({
@@ -123,9 +123,10 @@ def transform_listings_silver():
 
     logger.info('Saving airbnb listings data into parquet file...')
 
+
     df.to_parquet(os.path.join(SILVER_DIR, 'listings_clean.parquet'), index=False)
 
 
     logger.info('Airbnb listings data transformed and saved successfully!')
 
-    return
+    pass

@@ -1,4 +1,3 @@
-#%%
 import pandas as pd
 import os
 from utils.config import SILVER_DIR, GOLD_DIR, BRONZE_DIR
@@ -30,4 +29,4 @@ def process_listings_gold():
     logging.info('Saving neighbourhood geolocation data into parquet...')
     df_neighbourhood.to_parquet(os.path.join(GOLD_DIR, 'neighbourhood_geolocation.parquet'), index=False)
     logging.info('Neighbourhood geolocation data processed successfully!')
-    return
+    pass

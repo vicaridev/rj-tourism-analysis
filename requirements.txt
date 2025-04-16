@@ -1,8 +1,0 @@
-colorlog==6.9.0
-google_search_results==2.4.2
-numpy
-pandas==2.2.3
-python-dotenv==1.1.0
-requests==2.32.3
-serpapi==0.1.5
-setuptools==75.1.0
