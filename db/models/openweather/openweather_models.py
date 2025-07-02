@@ -4,6 +4,8 @@ from db.models.base import Base
 
 class Weather(Base):
     __tablename__ = 'weather'
+    __table_args__={'schema': 'silver'}
+
     
     id = Column(String, primary_key=True, nullable=False, default=lambda: str(uuid.uuid4()))
     neighbourhood = Column(String)

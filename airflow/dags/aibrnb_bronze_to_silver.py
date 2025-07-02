@@ -7,11 +7,13 @@ import os
 sys.path.insert(0, '/opt/airflow')
 
 
-from etl.airbnb.bronze import airbnb_extraction
+from etl.airbnb.bronze.airbnb_extraction import extract_airbnb_data
 
 from etl.airbnb.silver.transform_calendar import transform_calendar_silver
 from etl.airbnb.silver.transform_listings import transform_listings_silver
 from etl.airbnb.silver.transform_reviews import transform_reviews_silver
+
+from etl.airbnb.gold.process_listings import process_listings_gold
 
 from etl.airbnb.gold import process_listings
 
@@ -22,11 +24,7 @@ with DAG(
     schedule_interval="@daily",
     catchup=False,
     tags=["airbnb", "etl"]) as dag:
-    
-    extract_task = PythonOperator(
-        task_id="extract_airbnb_data",
-        python_callable=airbnb_extraction.extract_airbnb_data
-    )
+
     
     transform_reviews_task = PythonOperator(
         task_id="transform_reviews_data",
@@ -43,4 +41,4 @@ with DAG(
         python_callable=transform_calendar_silver
     )
     
-    extract_task >> transform_reviews_task >> transform_listings_task >> transform_calendar_task
+transform_reviews_task >> transform_listings_task >> transform_calendar_task

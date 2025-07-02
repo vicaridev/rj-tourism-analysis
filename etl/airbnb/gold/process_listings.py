@@ -19,14 +19,4 @@ def process_listings_gold():
                                             .reset_index())
         
     mean_price_by_neighborhood.to_parquet(os.path.join(GOLD_DIR, 'mean_price_by_neighborhood.parquet'), index=False)
-
-    df_neighbourhood = df[['neighbourhood', 'latitude', 'longitude']]
-    df_neighbourhood = df_neighbourhood.groupby('neighbourhood', as_index=False).agg({
-            'latitude': 'mean',
-            'longitude': 'mean'
-    })
-
-    logging.info('Saving neighbourhood geolocation data into parquet...')
-    df_neighbourhood.to_parquet(os.path.join(GOLD_DIR, 'neighbourhood_geolocation.parquet'), index=False)
-    logging.info('Neighbourhood geolocation data processed successfully!')
     pass

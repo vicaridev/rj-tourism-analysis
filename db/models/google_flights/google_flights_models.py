@@ -4,7 +4,8 @@ from db.models.base import Base
 
 
 class Flights(Base):
-    __tablename__ = 'flights'
+    __tablename__ = 'google_flights'
+    __table_args__={'schema': 'silver'}
     
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     duration = Column(Integer)

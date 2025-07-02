@@ -5,6 +5,8 @@ import logging
 from services.exchange import get_exchange_rate
 import numpy as np
 from utils.config import SILVER_DIR, BRONZE_DIR
+from db.db_config import get_engine
+from sqlalchemy.orm import sessionmaker
 
 
 logger = logging.getLogger(__name__)
@@ -15,6 +17,7 @@ def transform_listings_silver():
     df = pd.read_parquet(listings_path)
 
     df['host_id_2'] = df['host_id']
+
 
     hosts_columns = ['host_id',
                     'host_url', 'host_name', 'host_since', 'host_location', 'host_about',
@@ -32,13 +35,23 @@ def transform_listings_silver():
     to_replace_hosts_columns = ['host_response_rate', 'host_acceptance_rate']
     df_hosts[to_replace_hosts_columns] = df_hosts[to_replace_hosts_columns].replace('%', '', regex=True)
 
-    df_hosts = (df_hosts.dropna(subset=['host_name', 'host_location', 'host_url', 'host_verifications', 'host_identity_verified'])
-                    .fillna({'host_response_time': 'Unknown',
+    df_hosts = (df_hosts.fillna({
+                            'host_response_time': 'Unknown',
                             'host_response_rate': 0,
                             'host_acceptance_rate': 0,
                             'host_is_superhost': 'Unknown',
                             'host_about': 'Unknown',
-                            'host_neighbourhood': 'Unknown'
+                            'host_neighbourhood': 'Unknown',
+                            'host_name': 'Unknown',
+                            'host_location': 'Unknown',
+                            'host_url': 'Unknown',
+                            'host_verifications': 'Unknown',
+                            'host_identity_verified': 'Unknown',
+                            'host_listings_count': 0,
+                            'host_total_listings_count': 0,
+                            'host_response_rate': 0,
+                            'host_acceptance_rate': 0,
+                            'host_since': pd.Timestamp(1900, 1, 1)
                             })
                     .astype({
                             'host_id': 'string',
@@ -62,6 +75,8 @@ def transform_listings_silver():
                     .rename(columns={'host_response_rate': 'host_response_rate_perc',
                                     'host_acceptance_rate': 'host_acceptance_rate_perc',
                                     'host_id': 'id'})
+                    .drop_duplicates(subset=['id'], keep='last')
+                    .reset_index()
                     )
 
     logger.info('Saving airbnb hosts data into parquet file...')
@@ -114,19 +129,35 @@ def transform_listings_silver():
 
     df['first_review_filled'] = df['first_review'].fillna(pd.NaT)
     df['never_reviewd'] = df['first_review'].isna().astype(int)
-    df = df.replace({
+    df = (df.replace({
             'description': {np.nan: 'Unknown'},
             'neighborhood_overview': {np.nan: 'Unknown'},
             'reviews_per_month': {np.nan: 0}})
+        .dropna(subset=['first_review', 'last_review', 'review_scores_rating', 'first_review_filled']))        
 
     df[['instant_bookable', 'has_availability']] = df[['instant_bookable', 'has_availability']].replace({'f': 'No', 't': 'Yes'})
 
     logger.info('Saving airbnb listings data into parquet file...')
 
 
-    df.to_parquet(os.path.join(SILVER_DIR, 'listings_clean.parquet'), index=False)
-
+    try:
+        df.to_parquet(os.path.join(SILVER_DIR, 'listings_clean.parquet'), index=False)
+    except Exception as e:
+        logger.error(f'Erro ao salvar listings_clean.parquet: {e}')
+    
+    df_neighbourhood = df[['neighbourhood', 'latitude', 'longitude']]
+    df_neighbourhood = df_neighbourhood.groupby('neighbourhood', as_index=False).agg({
+            'latitude': 'mean',
+            'longitude': 'mean'
+    })
+    logging.info('Saving neighbourhood geolocation data into parquet...')
+    try:
+        df_neighbourhood.to_parquet(os.path.join(SILVER_DIR, 'neighbourhood_geolocation.parquet'), index=False)
+    except Exception as e:
+        logger.error(f'Erro ao salvar neighbourhood_geolocation.parquet: {e}')
+    
+    logging.info('Neighbourhood geolocation data processed successfully!')
 
     logger.info('Airbnb listings data transformed and saved successfully!')
-
+    
     pass

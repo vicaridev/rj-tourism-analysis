@@ -14,5 +14,4 @@ def get_exchange_rate():
         data = response.json()
         return data['conversion_rate']
     except Exception as e:
-        print(api_key)
         return print(f"Error: {e}")
