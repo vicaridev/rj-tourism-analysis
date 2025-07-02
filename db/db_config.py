@@ -34,27 +34,7 @@ def get_connection():
     except Exception as e:
         logger.error(f'Couldn\'t connect to database. Error: {e}')
         return
-    
-def execute_query(query, params=None, fetch_one=False, fetch_all=False):
-    conn = get_connection()
-    if not conn:
-        return
-    try:
-        with conn.cursor(cursor_factory=DictCursor) as cursor:
-            
-            cursor.execute(query, params or ())
-            
-            if fetch_one:
-                return cursor.fetchone()
-            if fetch_all:
-                return cursor.fetchall()
-            conn.commit()
-            
-    except Exception as e:
-        logger.error(f'Couldn\'t execute query. Error: {e}')
-    finally:
-        conn.close()
-        return
+
 
 def get_engine():
     try:

@@ -4,7 +4,8 @@ from sqlalchemy.orm import relationship
 from db.models.base import Base
 
 class Listing(Base):
-    __tablename__ = 'listings'
+    __tablename__ = 'airbnb_listings'
+    __table_args__ = {'schema': 'silver'}
     
     id =  Column(String(36), primary_key=True, default= lambda: str(uuid.uuid4()))
     listing_url =  Column(String, nullable=False)
@@ -42,16 +43,19 @@ class Listing(Base):
     calculated_host_listings_count_private_rooms = Column(Integer)
     calculated_host_listings_count_shared_rooms =  Column(Integer)
     reviews_per_month = Column(Float)
-    host_id =  Column(String(36), ForeignKey('hosts.id'), nullable=False)
+    host_id =  Column(String(36), ForeignKey('silver.airbnb_hosts.id'), nullable=False)
     price_BRL =  Column(Float)
     price_category =  Column(String)
     first_review_filled = Column(DateTime)
     never_reviewd = Column(Integer)
     
-    host = relationship('Host', back_populates='listings')
+    calendar = relationship('Calendar', back_populates='silver.airbnb_listings')
+    reviews = relationship('Reviews', back_populates='silver.airbnb_listings')
+    host = relationship('Host', back_populates='silver.airbnb_listings')
     
 class MeanPrice(Base):
-    __tablename__ = 'neighbourhood_mean_price'
+    __tablename__ = 'airbnb_neighbourhood_mean_price'
+    __table_args__ = {'schema': 'gold'}
     
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     neighbourhood = Column(String)

@@ -1,11 +1,13 @@
-FROM apache/airflow:2.7.3-python3.10
+FROM apache/airflow:2.10.5-python3.10
 
 USER root
 
+COPY . /app
+WORKDIR /app
 
-COPY requirements.txt /requirements.txt
-
+RUN chown -R airflow: /app
 
 USER airflow
+
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r /requirements.txt
+RUN pip install .

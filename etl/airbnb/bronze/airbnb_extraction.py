@@ -57,4 +57,4 @@ def extract_airbnb_data():
 
     logging.info('Extração do Airbnb concluída!')    
     
-    return
+    pass

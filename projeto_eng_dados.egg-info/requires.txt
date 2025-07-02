@@ -1,0 +1,16 @@
+pandas>=2.0
+requests
+python-dotenv
+sqlalchemy
+psycopg2-binary
+apache-airflow==2.10.5
+apache-airflow-providers-postgres
+apache-airflow-providers-http
+openmeteo-requests
+google-search-results
+
+[dev]
+black
+flake8
+ipython
+mypy

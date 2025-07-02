@@ -3,6 +3,7 @@ import requests
 import os
 from dotenv import load_dotenv
 import pandas as pd
+from utils.config import SILVER_DIR
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.."))
 load_dotenv(os.path.join(BASE_DIR, 'config', '.env'))
@@ -42,4 +43,6 @@ def get_weather_info(lat='-22.9035', lon='-43.2096'):
     df_final.reset_index(drop=True, inplace=True)
     df_final = df_final.astype({'neighbourhood': 'string'})
     
-    return
+    df_final.to_parquet(os.path.join(SILVER_DIR, 'weather.parquet'))
+    
+    pass

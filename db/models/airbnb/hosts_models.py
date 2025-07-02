@@ -4,7 +4,8 @@ from sqlalchemy.orm import relationship
 from db.models.base import Base
 
 class Host(Base):
-    __tablename__ = 'hosts'
+    __tablename__ = 'airbnb_hosts'
+    __table_args__ = {'schema': 'silver'}
     
     id = Column(String, primary_key=True)
     host_url = Column(String, nullable=True)
@@ -24,3 +25,5 @@ class Host(Base):
     host_verifications = Column(ARRAY(String))
     host_has_profile_pic = Column(String)
     host_identity_verified = Column(String)
+    
+    listing = relationship('Listing', back_populates='silver.airbnb_hosts')

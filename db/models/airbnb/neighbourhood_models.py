@@ -4,7 +4,8 @@ from sqlalchemy.orm import relationship
 from db.models.base import Base
 
 class Neighbourhood(Base):
-    __tablename__ = 'neighbourhood'
+    __tablename__ = 'airbnb_neighbourhood'
+    __table_args__ = {'schema': 'silver'}
     id = Column(String, primary_key=True, nullable=False, default=lambda: str(uuid.uuid4()))
     neighbourhood = Column(String, nullable=False)
     latitude = Column(Float, nullable=False)

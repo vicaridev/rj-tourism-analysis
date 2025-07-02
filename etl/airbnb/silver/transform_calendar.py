@@ -1,4 +1,3 @@
-#%%
 import os
 import pandas as pd
 import logging
@@ -34,4 +33,4 @@ def transform_calendar_silver():
 
     logger.info('Airbnb calendar data transformed and saved successfully!')
     
-    return
+    pass
